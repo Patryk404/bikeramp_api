@@ -64,12 +64,32 @@ import {
             let url = `https://api.distancematrix.ai/maps/api/distancematrix/json?origins=${trip.start_address}&destinations=${trip.destination_address}&key=${process.env.API_TOKEN}`
               url = encodeURI(url);
             const res = (await this.httpService.get(url).toPromise()).data
-            console.log(res.rows[0].elements[0].distance.value);
+            // console.log(res.rows[0].elements[0].distance.value);
             ridesByDate[trip.date.toISOString().split('T')[0]].push({distance: res.rows[0].elements[0].distance.value,price: trip.price });
           }
 
-          // console.log(ridesByDate); 
-          return trips;
+          console.log(ridesByDate); 
+          const keys = Object.keys(ridesByDate);
+          const res = [];
+          keys.map(key=>{
+            let distance = 0;
+            let price = 0;
+            ridesByDate[key].map(obj=>{
+              distance+=obj.distance;
+              price+=parseFloat(obj.price.split('P')[0]);
+            });
+            console.log(new Date(key).getDate());
+            res.push(
+              {
+                day:  new Date(key).toLocaleString('default',{month: 'long'})+", "+ new Date(key).getDate()+"th",
+                total_distance: (distance/1000).toString() + "km" ,
+                avg_ride: ((distance/1000)/ridesByDate[key].length).toString() + "km",
+                avg_price: (price/ridesByDate[key].length).toString()+"PLN"
+              }
+            );
+          }); 
+        
+          return res;
       
         }
   }
