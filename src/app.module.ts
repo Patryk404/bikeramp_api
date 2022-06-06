@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { GeolocationService } from './geolocation/geolocation.service';
 import { StatModule } from './stats/stat.module';
 import { TripModule } from './trip/trip.module';
 
@@ -25,6 +24,6 @@ import { TripModule } from './trip/trip.module';
     HttpModule
   ],
   controllers: [AppController],
-  providers: [AppService,GeolocationService],
+  providers: [AppService],
 })
 export class AppModule {}
